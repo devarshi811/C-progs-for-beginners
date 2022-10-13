@@ -39,27 +39,21 @@ void insertWord(char* c){
         head->nextWord=WordArray;  
         head=WordArray;  
     }  
-    printf("\nNode inserted\n");  
+    printf("\nWord: <%s> Node inserted\n", WordArray->word);  
     }  
 }
 
-char* getSubString(char* inputString, char* subString,
-    int index, int subStringLength){
-    int counter, inputStringLength = strlen(inputString);    
-    /* Input validation 
-     * range of sub-string must be in [0, strlen(inputString)]
-     */
-    if(index < 0 || index > inputStringLength || 
-          (index + subStringLength) > inputStringLength){
-        printf("Invalid Input");
-        return NULL;
+char* getSubString1(char str[], int s, int e){
+    int d = e - s;
+    char* newOne = (char*)malloc(d * sizeof(char));
+
+    int t = 0;
+    for(t = 0; t <= d; t++){
+        newOne[t] = str[s + t];
     }
-    subString = (char*)malloc(sizeof(char) * (subStringLength + 1));
-    for(counter = 0; counter < subStringLength; counter++){
-        subString[counter] = inputString[index++];
-    }
-    subString[counter] = '\0';
-    return subString;
+    newOne[t] = '\0';
+    
+    return newOne;
 }
 
 void split(char str[]){
@@ -82,20 +76,19 @@ void split(char str[]){
         else{
             if(isWordStarted){
                 eWord = t;
-                printf("\n%d %d %s", sWord, eWord, getSubString(str, buffer, sWord, eWord - sWord));
-                insertWord(getSubString(str, buffer, sWord, eWord - sWord));
+                insertWord(getSubString1(str, sWord, eWord - 1));
                 isWordStarted = false;
             }
         }
     }
     if(isWordStarted)
-        insertWord(getSubString(str, buffer, sWord, len - sWord));
+        insertWord(getSubString1(str, sWord, len));
 }
 
 void printWords(){
     struct Word *temp; 
     struct Word *temp1;  
-    printf("\n printing values...\n");  
+    printf("\nprinting values...\n");  
     temp = head;
     temp1 = head;
     while(temp != NULL)  
@@ -108,7 +101,7 @@ void printWords(){
     
     while(temp != NULL)  
     {  
-        printf("%s\t",temp->word);
+        printf("~%s~\t",temp->word);
         temp=temp->nextWord;  
     }  
 }
