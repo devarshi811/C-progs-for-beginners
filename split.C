@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<ctype.h>
 
 struct Word
 {
@@ -158,16 +159,53 @@ char* getWordAt(List* list, int ind){
   
 }
 
+char* strip(char* str){
+
+    // for left part
+
+    int temp, len = strlen(str);
+    int firstCutUntil = 0;
+    int lastCutUntil = len;
+    char* newStr;
+
+    temp = firstCutUntil;
+    while( temp < len && isspace(str[temp++]) != 0);
+
+    if(temp == len && isspace(str[temp - 1]) != 0){
+        newStr = (char *)malloc(sizeof(char));
+        newStr[0] = '\0';
+        return newStr;
+    }
+    
+    firstCutUntil = temp - 1;
+
+    temp = lastCutUntil - 1;
+
+    while( temp > firstCutUntil && isspace(str[temp--]) != 0);
+
+    lastCutUntil = temp + 1;
+
+    newStr = (char*)calloc(lastCutUntil - firstCutUntil + 2, sizeof(char));
+    len = 0;
+
+    for(temp = firstCutUntil; temp <= lastCutUntil; temp++){
+        newStr[len++] = str[temp];
+    }
+
+    newStr[len] = '\0';
+    return newStr;
+}
+
 int main(){
     char s[] = "this is my sentense    ";
-    char s1[] = "     hello this will be my new list,      !";
+    char s1[] = "     hello this will          be my new list,      !             ";
     char s2[] = "Dolore sint quis mollit esse. Dolore occaecat anim excepteur tempor reprehenderit enim qui proident sint ea duis. Aute consequat laborum labore cillum elit velit culpa labore elit labore quis enim aliquip irure. Pariatur voluptate laboris aute mollit qui proident id. Occaecat minim Lorem eiusmod ex Lorem sint cupidatat esse ea duis ex labore sunt. Magna ut occaecat ipsum ullamco reprehenderit nisi labore aliqua. Velit in aliqua labore magna esse do amet qui amet sit incididunt ea anim.";
     int myInd[] = {-15, -3, 0, 3, 15, 30, -16, -32, 28, -100, 100};
-    
+
     struct List* list = split(s);
     printWords(list);
 
-    struct List* list1 = split(s1);
+    struct List* list1 = split(strip(s1));
     printWords(list1);
 
     struct List* list2 = split(s2);
